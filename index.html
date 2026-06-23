@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<!-- スマホでの見え方を最適化する重要なタグ -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>トロンボーンパート紹介 & 相関図</title>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  /* === 全体の基本スタイル === */
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Zen Maru Gothic', sans-serif;
+    background-color: #fffaf2;
+    color: #5a4b4c;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    overflow-x: hidden;
+    /* スマホでのタップ時の変なハイライトを消す */
+    -webkit-tap-highlight-color: transparent; 
+  }
+
+  header {
+    text-align: center;
+    padding: 20px 15px 10px;
+    width: 100%;
+    max-width: 500px;
+  }
+
+  h1 {
+    font-size: 20px;
+    margin: 0 0 10px;
+    color: #ff8e9e;
+    text-shadow: 1px 1px 0px #fff, 2px 2px 0px #ffe0e5;
+  }
+
+  /* === タブのスタイル === */
+  .tabs {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 500px;
+    padding: 0 15px;
+  }
+
+  .tab-btn {
+    flex: 1;
+    background-color: #ffe5ec;
+    border: 2px solid #ffccd5;
+    padding: 10px 5px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-family: inherit;
+    font-weight: 700;
+    color: #aa6f79;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 0 #ffccd5;
+  }
+
+  .tab-btn.active {
+    background-color: #ff9fb5;
+    border-color: #ff8e9e;
+    color: white;
+    box-shadow: 0 2px 0 #ff8e9e;
+    transform: translateY(2px);
+  }
+
+  /* === メインコンテンツエリア === */
+  .container {
+    width: 100%;
+    max-width: 500px; /* スマホ向けに少し幅を絞る */
+    padding: 0 15px 40px;
+    position: relative;
+  }
+
+  .view-section {
+    display: none;
+    animation: fadeIn 0.4s ease forwards;
+  }
+
+  .view-section.active {
+    display: block;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* === 1. 代の一覧ページのスタイル === */
+  .group-photo-container {
+    width: 100%;
+    height: 160px; /* スマホ画面に合わせて少し低く */
+    background-color: #ffeef1;
+    border: 3px dashed #ffccd5;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    color: #b3888f;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .group-photo-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .attention-text {
+    text-align: center;
+    font-size: 14px; /* スマホで1行に収まるサイズ */
+    font-weight: 700;
+    color: #ff6b81;
+    margin-bottom: 20px;
+    animation: bounce 2s infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+
+  .member-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .member-card {
+    background: white;
+    border-radius: 16px;
+    padding: 12px 8px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(163, 131, 136, 0.08);
+    border: 2px solid #fff;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .member-card:active {
+    transform: scale(0.95); /* スマホタップ時のへこみアクション */
+  }
+
+  .card-img-wrapper {
+    position: relative;
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 8px;
+  }
+
+  .member-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #ffe5ec;
+    background-color: #f5f5f5;
+  }
+
+  .member-card .name {
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+
+  .member-card .intro-tag {
+    display: inline-block;
+    font-size: 10px;
+    background-color: #f0f7ff;
+    color: #4a90e2;
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-weight: bold;
+    word-break: keep-all; /* 単語の途中での改行を防ぐ */
+  }
+
+  /* === 2. 相関図ページのスタイル === */
+  .back-btn {
+    background: #fff;
+    border: 2px solid #ffe5ec;
+    border-radius: 20px;
+    color: #aa6f79;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    margin-bottom: 15px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 16px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  }
+
+  .back-btn:active {
+    background: #ffe5ec;
+  }
+
+  .diagram-layout {
+    display: flex;
+    align-items: stretch; /* 高さを揃える */
+    gap: 10px;
+    width: 100%;
+  }
+
+  /* 左側（主役） */
+  .left-hero {
+    width: 25%; /* スマホでは主役を少し小さくして矢印スペースを確保 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding-top: 10px;
+  }
+
+  .left-hero .member-img {
+    width: 75px;
+    height: 75px;
+    border-color: #ff9fb5;
+    box-shadow: 0 4px 10px rgba(255, 159, 181, 0.3);
+  }
+
+  .left-hero.animate-hero {
+    animation: heroPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  }
+
+  @keyframes heroPop {
+    0% { transform: scale(0.6); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  /* 右側（ターゲット一覧） */
+  .right-list {
+    width: 75%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* 行間をスマホ向けに調整 */
+  }
+
+  .relation-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    background: transparent;
+    border-radius: 12px;
+    padding: 2px 0;
+  }
+
+  .relation-row:active .right-person {
+    transform: scale(0.9);
+  }
+
+  .relation-row.clicked-animate {
+    animation: rowFadeOut 0.3s ease forwards;
+  }
+
+  @keyframes rowFadeOut {
+    0% { transform: scale(1) translateX(0); opacity: 1; }
+    100% { transform: scale(0.8) translateX(-20px); opacity: 0; }
+  }
+
+  .right-person {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 60px; /* アイコンサイズをスマホ最適化 */
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+  }
+
+  .right-person .member-img {
+    width: 55px;
+    height: 55px;
+    border-color: #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  }
+
+  .right-person .name {
+    font-size: 11px;
+    font-weight: 700;
+    margin-top: 4px;
+    white-space: nowrap;
+  }
+
+  /* === 矢印（スマホでの文字崩れを防ぐ改善版） === */
+  .arrow-box {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    margin-right: 8px;
+    gap: 6px;
+    justify-content: center;
+  }
+
+  .arrow-line {
+    background-color: white;
+    padding: 6px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 700;
+    box-shadow: 0 2px 6px rgba(90, 75, 76, 0.04);
+    position: relative;
+    /* 長い文章でもスマホで綺麗に改行させる */
+    white-space: normal;
+    line-height: 1.3;
+    word-break: auto-phrase;
+  }
+
+  /* clip-pathを使った、文字がガタつかない滑らかな伸びるアニメーション */
+  .arrow-line.out {
+    border-left: 4px solid #ff9fb5;
+    color: #aa6f79;
+    clip-path: inset(0 100% 0 0); /* 最初は右から隠す */
+    animation: revealRight 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  .arrow-line.in {
+    border-right: 4px solid #87ceeb;
+    color: #4a8096;
+    text-align: right;
+    clip-path: inset(0 0 0 100%); /* 最初は左から隠す */
+    animation: revealLeft 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  /* 順番に出現させるディレイ */
+  .relation-row:nth-child(1) .arrow-line.out { animation-delay: 0.1s; }
+  .relation-row:nth-child(1) .arrow-line.in  { animation-delay: 0.2s; }
+  .relation-row:nth-child(2) .arrow-line.out { animation-delay: 0.3s; }
+  .relation-row:nth-child(2) .arrow-line.in  { animation-delay: 0.4s; }
+  .relation-row:nth-child(3) .arrow-line.out { animation-delay: 0.5s; }
+  .relation-row:nth-child(3) .arrow-line.in  { animation-delay: 0.6s; }
+  .relation-row:nth-child(4) .arrow-line.out { animation-delay: 0.7s; }
+  .relation-row:nth-child(4) .arrow-line.in  { animation-delay: 0.8s; }
+
+  @keyframes revealRight {
+    0% { clip-path: inset(0 100% 0 0); }
+    100% { clip-path: inset(0 0 0 0); }
+  }
+
+  @keyframes revealLeft {
+    0% { clip-path: inset(0 0 0 100%); }
+    100% { clip-path: inset(0 0 0 0); }
+  }
+
+</style>
+</head>
+<body>
+
+  <header>
+    <h1>♪Trombone Part♪</h1>
+  </header>
+
+  <div class="tabs" id="tabs-container"></div>
+
+  <div class="container">
+    
+    <section id="generation-view" class="view-section active">
+      <div class="group-photo-container" id="group-photo">
+        <span style="font-size: 28px; z-index: 1;">📸</span>
+        <div style="font-weight: bold; margin-top: 5px; z-index: 1;" id="photo-label">67代 集合写真</div>
+        <div style="font-size: 10px; opacity: 0.8; z-index: 1;">(ここに実際の写真が入ります)</div>
+        <!-- 実際の写真を入れる時はここのコメントアウトを外してURLを変更してください -->
+        <!-- <img src="集合写真のURL.jpg" alt="集合写真"> -->
+      </div>
+      
+      <div class="attention-text">
+        ✨ 相関図はアイコンをタップ！！ 👇✨
+      </div>
+
+      <div class="member-grid" id="member-grid"></div>
+    </section>
+
+    <section id="diagram-view" class="view-section">
+      <button class="back-btn" onclick="backToGenerationView()">🔙 一覧に戻る</button>
+      
+      <div class="diagram-layout">
+        <div class="left-hero" id="left-hero"></div>
+        <div class="right-list" id="right-side"></div>
+      </div>
+    </section>
+
+  </div>
+
+<script>
+// === データ部分は前回と同じ（省略せずに全て記載） ===
+const data = {
+  "67代": {
+    photoLabel: "67代 集合写真",
+    members: [
+      { id: "kayana", name: "かやな", tag: "超多趣味パートリーダー", img: "https://placehold.jp/ffd1dc/5a4b4c/150x150.png?text=かやな",
+        relations: {
+          "horie": { out: "→ いつも頼りにしてるよ！", in: "← 実は私が支えてます" },
+          "aoha": { out: "→ 天然で癒やされる〜", in: "← しっかりしてて尊敬！" },
+          "fukami": { out: "→ 頼れる演奏の相棒", in: "← 一緒に吹けて最高！" }
+        }
+      },
+      { id: "horie", name: "ほりえ", tag: "地元の出雲弁がTbパートで流行中", img: "https://placehold.jp/ffd1dc/5a4b4c/150x150.png?text=ほりえ",
+        relations: {
+          "kayana": { out: "→ 実は私が支えてます", in: "← いつも頼りにしてるよ！" },
+          "aoha": { out: "→ いつもツッコミ待ち？", in: "← ボケがいつも面白い笑" },
+          "fukami": { out: "→ 練習熱心で見習いたい", in: "← 一緒に頑張ろうね！" }
+        }
+      },
+      { id: "aoha", name: "あおは", tag: "通部中に中に鳥の糞を落とされ帰宅", img: "https://placehold.jp/ffd1dc/5a4b4c/150x150.png?text=あおは",
+        relations: {
+          "kayana": { out: "→ しっかりしてて尊敬！", in: "← 天然で癒やされる〜" },
+          "horie": { out: "→ ボケがいつも面白い笑", in: "← いつもツッコミ待ち？" },
+          "fukami": { out: "→ 聞き上手な相談相手", in: "← なんでも話せる！" }
+        }
+      },
+      { id: "fukami", name: "ふかみ", tag: "練習場所にマイカーで登場", img: "https://placehold.jp/ffd1dc/5a4b4c/150x150.png?text=ふかみ",
+        relations: {
+          "kayana": { out: "→ 一緒に吹けて最高！", in: "← 頼れる演奏の相棒" },
+          "horie": { out: "→ 一緒に頑張ろうね！", in: "← 練習熱心で見習いたい" },
+          "aoha": { out: "→ なんでも話せる！", in: "← 聞き上手な相談相手" }
+        }
+      }
+    ]
+  },
+  "68代": {
+    photoLabel: "68代 集合写真",
+    members: [
+      { id: "sohei", name: "そうへい", tag: "三度の飯が大体ラーメン", img: "https://placehold.jp/b2f2bb/5a4b4c/150x150.png?text=そうへい",
+        relations: {
+          "sara": { out: "→ 演奏の引っ張り役！", in: "← いつも低音支えてくれて感謝" },
+          "kaho": { out: "→ 話がめちゃくちゃ合う", in: "← それな！っていつもなる" },
+          "chichan": { out: "→ 譜読みが早くてスゴイ", in: "← いつも教えてくれてありがと" },
+          "kurochi": { out: "→ いつも元気もらえる！", in: "← 一緒に吹くの楽しすぎ！" }
+        }
+      },
+      { id: "sara", name: "さら", tag: "電車で転倒し乗客にダイブ", img: "https://placehold.jp/b2f2bb/5a4b4c/150x150.png?text=さら",
+        relations: {
+          "sohei": { out: "→ いつも低音支えてくれて感謝", in: "→ 演奏の引っ張り役！" },
+          "kaho": { out: "→ 心の友、最強コンビ", in: "← 隣にいると安心感すごい" },
+          "chichan": { out: "→ 音色がとっても綺麗！", in: "← さら先輩の音に憧れてます" },
+          "kurochi": { out: "→ パワフルで頼もしい！", in: "← ついていきます！" }
+        }
+      },
+      { id: "kaho", name: "かほ", tag: "食堂でかわいい子を見つけナンパ", img: "https://placehold.jp/b2f2bb/5a4b4c/150x150.png?text=かほ",
+        relations: {
+          "sohei": { out: "→ それな！っていつもなる", in: "→ 話がめちゃくちゃ合う" },
+          "sara": { out: "← 隣にいると安心感すごい", in: "→ 心の友、最強コンビ" },
+          "chichan": { out: "→ いつも気配り上手さん", in: "← かほさんの優しさに救われてる" },
+          "kurochi": { out: "→ まっすぐな音が素敵！", in: "← もっと上手くなります！" }
+        }
+      },
+      { id: "chichan", name: "ちーちゃん", tag: "課題をするため大学で徹夜", img: "https://placehold.jp/b2f2bb/5a4b4c/150x150.png?text=ちーちゃん",
+        relations: {
+          "sohei": { out: "← いつも教えてくれてありがと", in: "→ 譜読みが早くてスゴイ" },
+          "sara": { out: "← さら先輩の音に憧れてます", in: "→ 音色がとっても綺麗！" },
+          "kaho": { out: "← かほさんの優しさに救われてる", in: "→ いつも気配り上手さん" },
+          "kurochi": { out: "→ 最高の同期パートナー", in: "← 一緒にいると落ち着く！" }
+        }
+      },
+      { id: "kurochi", name: "くろちー", tag: "実はめっちゃボケれます", img: "https://placehold.jp/b2f2bb/5a4b4c/150x150.png?text=くろちー",
+        relations: {
+          "sohei": { out: "← 一緒に吹くの楽しすぎ！", in: "→ いつも元気もらえる！" },
+          "sara": { out: "← ついていきます！", in: "→ パワフルで頼もしい！" },
+          "kaho": { out: "← もっと上手くなります！", in: "→ まっすぐな音が素敵！" },
+          "chichan": { out: "← 一緒にいると落ち着く！", in: "→ 最高の同期パートナー" }
+        }
+      }
+    ]
+  },
+  "69代": {
+    photoLabel: "69代 集合写真",
+    members: [
+      { id: "risa", name: "りーさ", tag: "？？？？？？？？？？", img: "https://placehold.jp/a5d8ff/5a4b4c/150x150.png?text=りーさ",
+        relations: {
+          "sana": { out: "→ いつも笑顔でまぶしい！", in: "← りーさの音程感リスペクト" },
+          "kishi": { out: "→ リズム感が良くて憧れる", in: "← 一緒に合わせやすい！" }
+        }
+      },
+      { id: "sana", name: "さなちゃん", tag: "？？？？？？？？？", img: "https://placehold.jp/a5d8ff/5a4b4c/150x150.png?text=さなちゃん",
+        relations: {
+          "risa": { out: "← りーさの音程感リスペクト", in: "→ いつも笑顔でまぶしい！" },
+          "kishi": { out: "→ 一緒に練習するの楽しい！", in: "← 私ももっと頑張る！" }
+        }
+      },
+      { id: "kishi", name: "岸ちゃん", tag: "？？？？？？？？？", img: "https://placehold.jp/a5d8ff/5a4b4c/150x150.png?text=岸ちゃん",
+        relations: {
+          "risa": { out: "← 一緒に合わせやすい！", in: "→ リズム感が良くて憧れる" },
+          "sana": { out: "← 私ももっと頑張る！", in: "→ 一緒に練習するの楽しい！" }
+        }
+      }
+    ]
+  }
+};
+
+let currentGen = "67代";
+
+function init() {
+  renderTabs();
+  renderGenerationView();
+}
+
+function renderTabs() {
+  const container = document.getElementById('tabs-container');
+  container.innerHTML = '';
+  Object.keys(data).forEach(gen => {
+    const btn = document.createElement('button');
+    btn.className = `tab-btn ${gen === currentGen ? 'active' : ''}`;
+    btn.innerText = gen;
+    btn.onclick = () => {
+      currentGen = gen;
+      renderTabs();
+      renderGenerationView();
+      backToGenerationView();
+    };
+    container.appendChild(btn);
+  });
+}
+
+function renderGenerationView() {
+  const genData = data[currentGen];
+  document.getElementById('photo-label').innerText = genData.photoLabel;
+  
+  const grid = document.getElementById('member-grid');
+  grid.innerHTML = '';
+  
+  genData.members.forEach(member => {
+    const card = document.createElement('div');
+    card.className = 'member-card';
+    card.onclick = () => showDiagramView(member.id);
+    
+    card.innerHTML = `
+      <div class="card-img-wrapper">
+        <img src="${member.img}" class="member-img" alt="${member.name}">
+      </div>
+      <div class="name">${member.name}</div>
+      <div class="intro-tag">${member.tag}</div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function showDiagramView(activeId) {
+  const genView = document.getElementById('generation-view');
+  const diaView = document.getElementById('diagram-view');
+  
+  genView.classList.remove('active');
+  diaView.classList.add('active');
+  
+  renderDiagram(activeId);
+}
+
+function backToGenerationView() {
+  document.getElementById('generation-view').classList.add('active');
+  document.getElementById('diagram-view').classList.remove('active');
+}
+
+function renderDiagram(heroId) {
+  const members = data[currentGen].members;
+  const hero = members.find(m => m.id === heroId);
+  
+  const leftSide = document.getElementById('left-hero');
+  leftSide.classList.remove('animate-hero');
+  void leftSide.offsetWidth; 
+  
+  leftSide.innerHTML = `
+    <div class="hero-wrapper">
+      <img src="${hero.img}" class="member-img" alt="${hero.name}">
+    </div>
+    <div class="name" style="font-size:14px; margin-top:6px; font-weight:700;">${hero.name}</div>
+  `;
+  leftSide.classList.add('animate-hero');
+
+  const rightSide = document.getElementById('right-side');
+  rightSide.innerHTML = '';
+  
+  members.forEach(member => {
+    if (member.id === heroId) return;
+    
+    const relation = hero.relations[member.id] || { out: "→ なかよし", in: "← なかよし" };
+    
+    const row = document.createElement('div');
+    row.className = 'relation-row';
+    
+    row.onclick = () => {
+      row.classList.add('clicked-animate');
+      setTimeout(() => {
+        renderDiagram(member.id);
+      }, 250);
+    };
+    
+    row.innerHTML = `
+      <div class="arrow-box">
+        <div class="arrow-line out">${relation.out}</div>
+        <div class="arrow-line in">${relation.in}</div>
+      </div>
+      <div class="right-person">
+        <img src="${member.img}" class="member-img" alt="${member.name}">
+        <div class="name">${member.name}</div>
+      </div>
+    `;
+    
+    rightSide.appendChild(row);
+  });
+}
+
+init();
+</script>
+</body>
+</html>
